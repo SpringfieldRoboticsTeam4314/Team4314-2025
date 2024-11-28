@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -11,7 +14,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
-/**
+/*
  * The methods in this class are called automatically corresponding to each mode, as described in
  * the TimedRobot documentation. If you change the name of this class or the package after creating
  * this project, you must also update the manifest file in the resource directory.
@@ -21,8 +24,19 @@ public class Robot extends TimedRobot {
   private final PWMSparkMax m_rightDrive = new PWMSparkMax(1);
   private final DifferentialDrive m_robotDrive =
       new DifferentialDrive(m_leftDrive::set, m_rightDrive::set);
+      
   private final XboxController m_controller = new XboxController(0);
   private final Timer m_timer = new Timer();
+// Locations for the swerve drive modules relative to the robot center.
+  Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381);
+  Translation2d m_frontRightLocation = new Translation2d(0.381, -0.381);
+  Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.381);
+  Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
+
+  // Creating my kinematics object using the module locations
+  SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
+    m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation
+  );
 
   /** Called once at the beginning of the robot program. */
   public Robot() {
