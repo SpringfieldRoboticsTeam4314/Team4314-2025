@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+
 // import com.ctre.phoenix6.swerve.SwerveModule;
 // import com.ctre.phoenix6.swerve.jni.SwerveJNI.ModuleState;
 
@@ -28,6 +30,8 @@ public class Robot extends TimedRobot {
   private final PWMSparkMax m_leftDrive = new PWMSparkMax(0);
   private final PWMSparkMax m_rightDrive = new PWMSparkMax(1);
 
+  private final TalonFX gripperMotor = new TalonFX(3);
+
   private final XboxController m_controller = new XboxController(0);
   private final Timer m_timer = new Timer();
   // Locations for the swerve drive modules relative to the robot center.
@@ -48,6 +52,7 @@ public class Robot extends TimedRobot {
     SwerveModuleState frontRight_swerveState = modules[1];
     SwerveModuleState backLeft_swerveState = modules[2];
     SwerveModuleState backRight_swerveState = modules[3];
+    
   /** Called once at the beginning of the robot program. */
   public Robot() {
 
@@ -55,6 +60,7 @@ public class Robot extends TimedRobot {
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     m_rightDrive.setInverted(true);
+    
   }
 
   /** This function is run once each time the robot enters autonomous mode. */
@@ -76,12 +82,22 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     
+    
    
   }
 
   /** This function is called periodically during teleoperated mode. */
   @Override
   public void teleopPeriodic() {
+    if (m_controller.getPOV() == 0){
+      gripperMotor.set(.1);
+    }
+    else if (m_controller.getPOV() == 180){
+      gripperMotor.set(-.1);
+    }
+    else{
+      gripperMotor.set(0);
+    }
     
   }
 
